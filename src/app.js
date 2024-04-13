@@ -1,24 +1,27 @@
 import express from 'express';
-import morgan from 'morgan';
-import { connection } from './database.js';
 import cors from 'cors';
+
+import { connection } from './database.js';
+import { taskRouter } from './routes/tasks.routes.js';
+import { loginRouter } from './routes/auth.routes.js';
 
 connection();
 export const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.get('/v1/get_usuarios', (req, res) => {
-    connection.query('SELECT * FROM "users"', (error, results) => {
-        if (error) {
-            return res.status(500).json({ message: 'Error interno del servidor' });
-        }
-        
-        res.status(200).json({ users: results.rows });
-        //console.log('Usuarios', results.rows );
+// Routes
+app.get('/', (req, res) => res.json( { message: 'Hola' } ));
+app.use(taskRouter);
+app.use(loginRouter);
 
+// Error Handler
+app.use((err, req, res, next ) => {
+    res.status(500).json({
+        status: 'error',
+        message: err.message
     });
 });
-
-app.use(morgan('dev'));
