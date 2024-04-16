@@ -65,7 +65,7 @@ export const deleteTask = async (req, res, next) => {
 
         const result = await pool.query(
             'DELETE FROM tasks WHERE id_task = $1', [req.params.id]
-        )
+        );
 
         if ( result.rowCount === 0 ) {
             res.status(404).json({
@@ -92,7 +92,7 @@ export const updateTask = async (req, res, next) => {
         const result = await pool.query(
             'UPDATE tasks SET title = $1, description = $2 WHERE id_task = $3',
             [title, description, id]
-        )
+        );
         
         if ( result.rowCount === 0 ) {
             res.status(404).json({
@@ -106,5 +106,6 @@ export const updateTask = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+
+};
 
