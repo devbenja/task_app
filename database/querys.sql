@@ -15,3 +15,13 @@ CREATE TABLE "tasks" (
     title VARCHAR(255) UNIQUE NOT NULL,
     description TEXT 
 );
+
+INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING *
+
+DELETE FROM tasks WHERE id_task = $1
+
+SELECT * FROM tasks
+
+SELECT * FROM tasks WHERE id_task = $1
+
+UPDATE tasks SET title = 'Nuevo Titulo', description = 'Nueva Desc' WHERE id_task = 4

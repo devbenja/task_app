@@ -9,25 +9,24 @@ export const getAllTasks = async (req, res, next) => {
 
 };
 
-export const getTask = async (req, res) => {
-
-    const id_task = req.params.id;
+export const getTask = async (req, res, next) => {
 
     try {
+
         const result = await pool.query(
-            'SELECT * FROM tasks WHERE id_task = ($1)', [id_task]
+            'SELECT * FROM tasks WHERE id_task = $1', [req.params.id]
         );
 
         if ( result.rows.length > 0 ) {
-            res.json(result.rows);
+            res.json(result.rows[0]);
         } else {
-            res.json({
+            res.status(404).json({
                 message: 'Task No Exist'
             });
         }
         
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 
 };
@@ -44,7 +43,7 @@ export const createTask = async (req, res, next) => {
         );
 
         res.json(result.rows[0]);
-        console.log('Insert: ', result.rows[0]);
+        //console.log('Insert: ', result.rows[0]);
 
     } catch (error) {
 
@@ -60,7 +59,52 @@ export const createTask = async (req, res, next) => {
 
 }; 
 
-export const deleteTask = (req, res) => res.send('delete task');
+export const deleteTask = async (req, res, next) => {
 
-export const updateTask = (req, res) => res.send('update task');
+    try {
+
+        const result = await pool.query(
+            'DELETE FROM tasks WHERE id_task = $1', [req.params.id]
+        )
+
+        if ( result.rowCount === 0 ) {
+            res.status(404).json({
+                message: 'Task No Exist'
+            });
+            //console.log(result);
+        } else {
+            res.json({ message: `Task with id: ${req.params.id} Deleted` });
+            //console.log(result);
+        }
+
+    } catch (error) {
+        next(error);
+    }
+
+};
+
+export const updateTask = async (req, res, next) => {
+
+    const id = req.params.id;
+    const { title, description } = req.body;
+
+    try {
+        const result = await pool.query(
+            'UPDATE tasks SET title = $1, description = $2 WHERE id_task = $3',
+            [title, description, id]
+        )
+        
+        if ( result.rowCount === 0 ) {
+            res.status(404).json({
+                message: 'Task No Exist'
+            });
+            //console.log(result);
+        } else {
+            res.json({ message: `Task with id: ${req.params.id} Updated` });
+            //console.log(result);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
 
