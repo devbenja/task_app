@@ -10,3 +10,8 @@ CREATE TABLE "users" (
 SELECT * FROM "users";
 
 
+CREATE TABLE "tasks" (
+    id_task SERIAL PRIMARY KEY,
+    title VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT 
+);

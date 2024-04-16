@@ -3,16 +3,13 @@ import { config } from 'dotenv';
 
 config();
 
-const pool = new pg.Pool({
+export const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: true
 });
 
-export const connection = async () => {
-    try {
-        await pool.connect();
-        console.log('>>> Conexion Establecida');
-    } catch ( error ) {
-        console.log( error );
-    }
-}
+pool.on('connect', () => {
+    console.log('Database Conected');
+});
+
+

@@ -1,11 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 
-import { connection } from './database.js';
 import { taskRouter } from './routes/tasks.routes.js';
 import { loginRouter } from './routes/auth.routes.js';
 
-connection();
 export const app = express();
 
 // Middlewares
