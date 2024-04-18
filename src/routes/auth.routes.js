@@ -1,6 +1,8 @@
 import { Router } from "express";
 import * as Auth from '../controllers/auth.controller.js';
 
+import { isAuth } from "../middlewares/auth.middleware.js";
+
 // Router de express para el auth
 
 export const loginRouter = Router();
@@ -13,4 +15,4 @@ loginRouter.post('/api/v1/register', Auth.register );
 
 loginRouter.post('/api/v1/logout', Auth.logout );
 
-loginRouter.get('/api/v1/profile', Auth.profile );
+loginRouter.get('/api/v1/profile', isAuth, Auth.profile );

@@ -1,4 +1,5 @@
 import { pool } from '../database.js';
+import { createAccesToken } from '../libs/jwt.js';
 import bcrypt from 'bcrypt';
 
 // Auth Controllers
@@ -13,14 +14,19 @@ export const register = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(user_password, 10);
 
-        console.log(hashedPassword);
-
         const result = await pool.query(
             'INSERT INTO users (user_name, user_password, user_email) VALUES ($1, $2, $3) RETURNING *',
             [user_name, hashedPassword, user_email]
         );
     
-        console.log('User Registered: ', result.rows[0]);
+        const token = await createAccesToken({ id: result.rows[0].id_user });
+
+        res.cookie('jwt_token', token, {
+            httpOnly: true,
+            sameSite: 'none',
+            maxAge: 24 * 60 * 60 * 1000 // 1 Dia
+        }); 
+
         return res.json(result.rows[0]);
     
     } catch (error) {

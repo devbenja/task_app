@@ -4,6 +4,8 @@ import { pool } from '../database.js';
 
 export const getAllTasks = async (req, res, next) => {
 
+    console.log(req.userId);
+
     const result = await pool.query('SELECT * FROM tasks');
     res.json(result.rows);
 
@@ -32,6 +34,8 @@ export const getTask = async (req, res, next) => {
 };
 
 export const createTask = async (req, res, next) => {
+
+    console.log('Tarea Creada por Usuario con id: ', req.userId );
 
     const { title, description } = req.body;
 
