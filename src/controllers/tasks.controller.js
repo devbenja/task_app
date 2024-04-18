@@ -35,7 +35,7 @@ export const getTask = async (req, res, next) => {
 
 export const createTask = async (req, res, next) => {
 
-    console.log('Tarea Creada por Usuario con id: ', req.userId );
+    console.log('Tarea Creada por Usuario: ', req.userName );
 
     const { title, description } = req.body;
 

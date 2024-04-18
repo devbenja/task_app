@@ -16,6 +16,7 @@ export const isAuth = (req, res, next) => {
         } else {
             console.log(decode);
             req.userId = decode.id;
+            req.userName = decode.name;
             next();
         }
 
