@@ -6,7 +6,11 @@ export const getAllTasks = async (req, res, next) => {
 
     console.log(req.userId);
 
-    const result = await pool.query('SELECT * FROM tasks');
+    const result = await pool.query(
+        'SELECT * FROM tasks WHERE user_id = $1',
+        [req.userId]
+    );
+    
     res.json(result.rows);
 
 };
@@ -42,8 +46,8 @@ export const createTask = async (req, res, next) => {
     try {
 
         const result = await pool.query(
-            'INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING *',
-            [title, description]
+            'INSERT INTO tasks (title, description, user_id) VALUES ($1, $2, $3) RETURNING *',
+            [title, description, req.userId]
         );
 
         res.json(result.rows[0]);

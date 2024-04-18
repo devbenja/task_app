@@ -1,6 +1,8 @@
 import { pool } from '../database.js';
 import { createAccesToken } from '../libs/jwt.js';
+
 import bcrypt from 'bcrypt';
+import md5 from 'md5';
 
 // Auth Controllers
 
@@ -50,6 +52,7 @@ export const login = async (req, res, next) => {
         next(error);
 
     }
+
 };
 
 export const register = async (req, res, next) => {
@@ -60,9 +63,11 @@ export const register = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(user_password, 10);
 
+        const gravatar = `https://www.gravatar.com/avatar/${md5(user_email)}?d=identicon`;
+
         const result = await pool.query(
-            'INSERT INTO users (user_name, user_password, user_email) VALUES ($1, $2, $3) RETURNING *',
-            [user_name, hashedPassword, user_email]
+            'INSERT INTO users (user_name, user_password, user_email, gravatar) VALUES ($1, $2, $3, $4) RETURNING *',
+            [user_name, hashedPassword, user_email, gravatar]
         );
     
         const token = await createAccesToken({ 
@@ -99,4 +104,20 @@ export const logout = (req, res) => {
     res.sendStatus(200);
 };
 
-export const profile = (req, res) => res.send('User Profile');
+export const profile = async (req, res, next) => {
+
+    try {
+
+        const result = await pool.query(
+            'SELECT * FROM users WHERE id_user = $1', [req.userId]
+        );
+
+        return res.json(result.rows[0]);
+
+    } catch (error) {
+
+        next(error);
+        
+    }
+
+};

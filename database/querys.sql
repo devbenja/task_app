@@ -1,20 +1,12 @@
 /*Tasks Database Querys*/ 
 
-
-CREATE TABLE "users" (
-    id SERIAL PRIMARY KEY,
-    user_name VARCHAR(255) NOT NULL,
-    user_password VARCHAR(255) NOT NULL
-);
-
-SELECT * FROM "users";
-
-
 CREATE TABLE "tasks" (
     id_task SERIAL PRIMARY KEY,
     title VARCHAR(255) UNIQUE NOT NULL,
     description TEXT 
 );
+
+ALTER TABLE "tasks" ADD COLUMN user_id INTEGER REFERENCES users(id_user);
 
 INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING *
 
@@ -34,3 +26,5 @@ CREATE TABLE users (
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE users ADD COLUMN gravatar VARCHAR(255);
