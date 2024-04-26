@@ -40,7 +40,8 @@ export const login = async (req, res, next) => {
         });
 
         res.cookie('jwt_token', token, {
-            httpOnly: true,
+            //httpOnly: true,
+            //secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
         }); 
@@ -76,7 +77,8 @@ export const register = async (req, res, next) => {
         });
 
         res.cookie('jwt_token', token, {
-            httpOnly: true,
+            //httpOnly: true,
+            //secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
         }); 
