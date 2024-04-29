@@ -2,8 +2,8 @@
 
 CREATE TABLE "tasks" (
     id_task SERIAL PRIMARY KEY,
-    title VARCHAR(255) UNIQUE NOT NULL,
-    description TEXT 
+    title VARCHAR(255) NOT NULL,
+    description TEXT
 );
 
 ALTER TABLE "tasks" ADD COLUMN user_id INTEGER REFERENCES users(id_user);

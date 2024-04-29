@@ -9,15 +9,17 @@ export const isAuth = (req, res, next) => {
     jwt.verify(token, 'xyz123', (err, decode) => {
         
         if (err) {
-            res.status(401).json({
+
+            return res.status(401).json({
                 message: 'you dont have access'
             });
-            console.log('you dont have access')
+
         } else {
-            console.log(decode);
+
             req.userId = decode.id;
             req.userName = decode.name;
             next();
+
         }
 
     });

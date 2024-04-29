@@ -4,14 +4,12 @@ import { pool } from '../database.js';
 
 export const getAllTasks = async (req, res, next) => {
 
-    console.log(req.userId);
-
     const result = await pool.query(
         'SELECT * FROM tasks WHERE user_id = $1',
         [req.userId]
     );
     
-    res.json(result.rows);
+    return res.json(result.rows);
 
 };
 
@@ -24,9 +22,9 @@ export const getTask = async (req, res, next) => {
         );
 
         if ( result.rows.length > 0 ) {
-            res.json(result.rows[0]);
+            return res.json(result.rows[0]);
         } else {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Task No Exist'
             });
         }
@@ -39,8 +37,6 @@ export const getTask = async (req, res, next) => {
 
 export const createTask = async (req, res, next) => {
 
-    console.log('Tarea Creada por Usuario: ', req.userName );
-
     const { title, description } = req.body;
 
     try {
@@ -51,7 +47,6 @@ export const createTask = async (req, res, next) => {
         );
 
         res.json(result.rows[0]);
-        //console.log('Insert: ', result.rows[0]);
 
     } catch (error) {
 
@@ -76,13 +71,16 @@ export const deleteTask = async (req, res, next) => {
         );
 
         if ( result.rowCount === 0 ) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Task No Exist'
             });
-            //console.log(result);
+            
         } else {
-            res.json({ message: `Task with id: ${req.params.id} Deleted` });
-            //console.log(result);
+
+            return res.json({ 
+                message: `Task with id: ${req.params.id} Deleted` 
+            });
+
         }
 
     } catch (error) {
@@ -103,13 +101,14 @@ export const updateTask = async (req, res, next) => {
         );
         
         if ( result.rowCount === 0 ) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Task No Exist'
             });
-            //console.log(result);
+            
         } else {
-            res.json({ message: `Task with id: ${req.params.id} Updated` });
-            //console.log(result);
+
+            return res.json({ message: `Task with id: ${req.params.id} Updated` });
+            
         }
     } catch (error) {
         next(error);

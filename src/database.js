@@ -1,11 +1,15 @@
 import pg from 'pg';
-import { config } from 'dotenv';
+import { PG_PORT, PG_HOST, PG_USER, PG_PASSWORD, PG_DATABASE } from './config.js';
 
-config();
+//import { config } from 'dotenv';
+//config();
 
 export const pool = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
+    port: PG_PORT,
+    host: PG_HOST,
+    user: PG_USER,
+    password: PG_PASSWORD,
+    database: PG_DATABASE,
 });
 
 pool.on('connect', () => {

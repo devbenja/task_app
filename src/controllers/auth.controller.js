@@ -13,18 +13,18 @@ export const login = async (req, res, next) => {
     try {
 
         if (!email || !password) {
-            return res.status(400).json({ 
-                message: 'Email and password are required' 
+            return res.status(400).json({
+                message: 'Email and password are required'
             });
         }
-        
-        const result = await pool.query('SELECT * FROM users WHERE user_email = $1', [email] );
+
+        const result = await pool.query('SELECT * FROM users WHERE user_email = $1', [email]);
 
         if (result.rowCount === 0) {
             return res.status(400).json({
                 message: 'Unregistered email'
             });
-        } 
+        }
 
         const validPassword = await bcrypt.compare(password, result.rows[0].user_password);
 
@@ -34,7 +34,7 @@ export const login = async (req, res, next) => {
             });
         }
 
-        const token = await createAccesToken({ 
+        const token = await createAccesToken({
             id: result.rows[0].id_user,
             name: result.rows[0].user_name,
         });
@@ -44,7 +44,7 @@ export const login = async (req, res, next) => {
             secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
-        }); 
+        });
 
         return res.json(result.rows[0]);
 
@@ -58,8 +58,6 @@ export const login = async (req, res, next) => {
 
 export const register = async (req, res, next) => {
 
-    console.log(req.body)
-
     const { user_name, user_email, user_password } = req.body;
 
     try {
@@ -72,8 +70,8 @@ export const register = async (req, res, next) => {
             'INSERT INTO users (user_name, user_password, user_email, gravatar) VALUES ($1, $2, $3, $4) RETURNING *',
             [user_name, hashedPassword, user_email, gravatar]
         );
-    
-        const token = await createAccesToken({ 
+
+        const token = await createAccesToken({
             id: result.rows[0].id_user,
             name: result.rows[0].user_name,
         });
@@ -83,19 +81,19 @@ export const register = async (req, res, next) => {
             secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
-        }); 
+        });
 
         return res.json(result.rows[0]);
-    
+
     } catch (error) {
 
-        if ( error.code === '23505' ) {
+        if (error.code === '23505') {
+
             res.status(400).json({
                 message: 'Email Already Registered'
             });
-            console.log(error);
+
         } else {
-            console.log(error);
             next(error);
         }
 
@@ -121,7 +119,7 @@ export const profile = async (req, res, next) => {
     } catch (error) {
 
         next(error);
-        
+
     }
 
 };
