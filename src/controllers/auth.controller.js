@@ -41,7 +41,7 @@ export const login = async (req, res, next) => {
 
         res.cookie('jwt_token', token, {
             //httpOnly: true,
-            //secure: true,
+            secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
         }); 
@@ -58,7 +58,9 @@ export const login = async (req, res, next) => {
 
 export const register = async (req, res, next) => {
 
-    const { user_name, user_password, user_email } = req.body;
+    console.log(req.body)
+
+    const { user_name, user_email, user_password } = req.body;
 
     try {
 
@@ -78,7 +80,7 @@ export const register = async (req, res, next) => {
 
         res.cookie('jwt_token', token, {
             //httpOnly: true,
-            //secure: true,
+            secure: true,
             sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000 // 1 Dia
         }); 
